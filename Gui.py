@@ -24,31 +24,34 @@ infoText.place(relx=0.5, rely=0.55, anchor="center")
 def reset_info_field():
     infoText.config(text="Nothing here again?", fg="#0000FF")
 
+    
 def reset_text():
     textField.delete(0, tkinter.END)
 
-
-on_doing = [False]
+    
+on_doing = False
 
 
 def sort_folder_(event=None):
-    if on_doing[0]:
+    global on_doing
+    if on_doing:
         infoText.config(text="Other directory is sorting", fg="#CC0000")
         window.after(3000, reset_info_field)
     else:
         if os.path.exists(textField.get()) and os.path.isdir(textField.get()):
-            on_doing[0] = True
+            global on_doing
+            on_doing = True
             infoText.config(text=". . .")
             Engine.Engine.sort_folder(Engine.Formater.format_path(textField.get()))
             time.sleep(2)
             infoText.config(text="Directory is sorted", fg="#009900")
             reset_text()
-            on_doing[0] = False
-            window.after(3000, reset_info_field)
+            on_doing = False
         else:
             infoText.config(text="Path does not exist or path is not directory", fg="#CC0000")
             reset_text()
-            window.after(3000, reset_info_field)
+            
+        window.after(3000, reset_info_field)
 
 
 sortButton = tkinter.Button(text="SORT", font=("bebas", 30), bg="#00FFFF", fg="#FFFFFF", command=sort_folder_)
